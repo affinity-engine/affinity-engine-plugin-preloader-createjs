@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import createjs from 'ember-createjs';
+import { BusPublisherMixin } from 'ember-message-bus';
 
 const {
   Service,
@@ -8,15 +9,24 @@ const {
   set
 } = Ember;
 
-export default Service.extend({
+export default Service.extend(BusPublisherMixin, {
   init(...args) {
     this._super(...args);
 
+    const engineId = get(this, 'engineId');
     const queue = new createjs.LoadQueue(true);
 
     if (isPresent(createjs.Sound)) {
       queue.installPlugin(createjs.Sound);
     }
+
+    queue.on('complete', (...args) => {
+      this.publish(`ae:${engineId}:preloadCompletion`, ...args);
+    });
+
+    queue.on('progress', (...args) => {
+      this.publish(`ae:${engineId}:preloadProgress`, ...args);
+    });
 
     set(this, 'queue', queue);
   },
@@ -31,17 +41,5 @@ export default Service.extend({
 
   loadFile(file) {
     get(this, 'queue').loadFile(file);
-  },
-
-  onComplete(callback) {
-    get(this, 'queue').on('complete', callback);
-  },
-
-  onFileLoad(callback) {
-    get(this, 'queue').on('fileload', callback);
-  },
-
-  onProgress(callback) {
-    get(this, 'queue').on('progress', callback);
   }
 });
