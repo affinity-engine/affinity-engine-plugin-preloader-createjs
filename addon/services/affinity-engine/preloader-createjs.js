@@ -6,6 +6,7 @@ const {
   Service,
   get,
   isPresent,
+  run,
   set
 } = Ember;
 
@@ -21,11 +22,11 @@ export default Service.extend(BusPublisherMixin, {
     }
 
     queue.on('complete', (...args) => {
-      this.publish(`ae:${engineId}:preloadCompletion`, ...args);
+      run(() => this.publish(`ae:${engineId}:preloadCompletion`, ...args));
     });
 
     queue.on('progress', (...args) => {
-      this.publish(`ae:${engineId}:preloadProgress`, ...args);
+      run(() => this.publish(`ae:${engineId}:preloadProgress`, ...args));
     });
 
     set(this, 'queue', queue);
