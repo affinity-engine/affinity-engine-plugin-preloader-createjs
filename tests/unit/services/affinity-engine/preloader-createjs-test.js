@@ -29,7 +29,7 @@ test('publishes `ae:engineId:preloadProgress` as it loads', function(assert) {
 
   later(() => {
     done();
-  }, 10);
+  }, 100);
 });
 
 test('publishes `ae:engineId:preloadCompletion` once it is done loading', function(assert) {
@@ -44,7 +44,7 @@ test('publishes `ae:engineId:preloadCompletion` once it is done loading', functi
 
   later(() => {
     done();
-  }, 10);
+  }, 100);
 });
 
 test('`idFor` returns a string specific to the fixture and attr', function(assert) {
@@ -68,7 +68,7 @@ test('`loadFile` adds a file to the queue', function(assert) {
     assert.equal(service.get('queue._loadedResults.foo.nodeName'), 'IMG', 'file is loaded');
 
     done();
-  }, 10);
+  }, 100);
 });
 
 test('`getElement` returns the preloaded dom element', function(assert) {
@@ -87,5 +87,5 @@ test('`getElement` returns the preloaded dom element', function(assert) {
     assert.equal(element.src.substring(0, 5), 'blob:', 'src is a preloaded blob');
 
     done();
-  }, 10);
+  }, 100);
 });
