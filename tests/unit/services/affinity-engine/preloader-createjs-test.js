@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { moduleFor, test } from 'ember-qunit';
 import { initializeQUnitAssertions } from 'ember-message-bus';
+import multiton from 'ember-multiton-service';
 
 const { getOwner } = Ember;
 const { run: { later } } = Ember;
@@ -13,18 +14,18 @@ moduleFor('service:affinity-engine/preloader-createjs', 'Unit | Service | affini
   beforeEach() {
     const appInstance = getOwner(this);
 
-    initializeQUnitAssertions(appInstance);
+    initializeQUnitAssertions(appInstance, 'eBus', Ember.Object.extend({ eBus: multiton('message-bus', 'engineId'), engineId: 'bar' }));
   }
 });
 
-test('publishes `ae:engineId:preloadProgress` as it loads', function(assert) {
+test('publishes `preloadProgress` as it loads', function(assert) {
   assert.expect(3);
 
   const done = assert.async();
 
   const service = this.subject({ engineId: 'bar' });
 
-  assert.willPublish('ae:bar:preloadProgress', '`preloadProgress` was triggered');
+  assert.willPublish('preloadProgress', '`preloadProgress` was triggered');
   service.loadFile({ id: 'foo', src });
 
   later(() => {
@@ -32,14 +33,14 @@ test('publishes `ae:engineId:preloadProgress` as it loads', function(assert) {
   }, 100);
 });
 
-test('publishes `ae:engineId:preloadCompletion` once it is done loading', function(assert) {
+test('publishes `preloadCompletion` once it is done loading', function(assert) {
   assert.expect(1);
 
   const done = assert.async();
 
   const service = this.subject({ engineId: 'bar' });
 
-  assert.willPublish('ae:bar:preloadCompletion', '`preloadCompletion` was triggered');
+  assert.willPublish('preloadCompletion', '`preloadCompletion` was triggered');
   service.loadFile({ id: 'foo', src });
 
   later(() => {
@@ -50,7 +51,7 @@ test('publishes `ae:engineId:preloadCompletion` once it is done loading', functi
 test('`idFor` returns a string specific to the fixture and attr', function(assert) {
   assert.expect(1);
 
-  const service = this.subject();
+  const service = this.subject({ engineId: 'bar' });
 
   assert.equal(service.idFor({ _type: 'foo', id: 'bar' }, 'baz'), 'foo:bar:baz', 'string is correct');
 });
@@ -60,7 +61,7 @@ test('`loadFile` adds a file to the queue', function(assert) {
 
   const done = assert.async();
 
-  const service = this.subject();
+  const service = this.subject({ engineId: 'bar' });
 
   service.loadFile({ id: 'foo', src });
 
@@ -76,7 +77,7 @@ test('`getElement` returns the preloaded dom element', function(assert) {
 
   const done = assert.async();
 
-  const service = this.subject();
+  const service = this.subject({ engineId: 'bar' });
 
   service.loadFile({ id: 'foo', src });
 

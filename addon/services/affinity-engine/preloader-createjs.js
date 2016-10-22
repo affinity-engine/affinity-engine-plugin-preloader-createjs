@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import createjs from 'ember-createjs';
-import { BusPublisherMixin } from 'ember-message-bus';
+import multiton from 'ember-multiton-service';
 
 const {
   Service,
@@ -10,11 +10,13 @@ const {
   set
 } = Ember;
 
-export default Service.extend(BusPublisherMixin, {
+export default Service.extend({
+  eBus: multiton('message-bus', 'engineId'),
+
   init(...args) {
     this._super(...args);
 
-    const engineId = get(this, 'engineId');
+    const eBus = get(this, 'eBus');
     const queue = new createjs.LoadQueue(true);
 
     if (isPresent(createjs.Sound)) {
@@ -22,11 +24,11 @@ export default Service.extend(BusPublisherMixin, {
     }
 
     queue.on('complete', (...args) => {
-      run(() => this.publish(`ae:${engineId}:preloadCompletion`, ...args));
+      run(() => eBus.publish('preloadCompletion', ...args));
     });
 
     queue.on('progress', (...args) => {
-      run(() => this.publish(`ae:${engineId}:preloadProgress`, ...args));
+      run(() => eBus.publish('preloadProgress', ...args));
     });
 
     set(this, 'queue', queue);
