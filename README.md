@@ -3,4 +3,4 @@
 
 # affinity-engine-preloader-createjs
 
-You'll find the interactive guides [here](http://www.ember.engine/learn/curtain).
+You'll find the interactive guides [here](http://www.affinityengine.org/plugins/preloader-createjs).
