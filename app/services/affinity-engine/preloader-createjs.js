@@ -1,1 +1,1 @@
-export { default } from 'affinity-engine-preloader-createjs/services/affinity-engine/preloader-createjs';
+export { default } from 'affinity-engine-plugin-preloader-createjs/services/affinity-engine/preloader-createjs';
