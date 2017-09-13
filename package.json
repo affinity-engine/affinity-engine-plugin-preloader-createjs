@@ -1,6 +1,6 @@
 {
   "name": "affinity-engine-plugin-preloader-createjs",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "An Affinity Engine preloader using createjs",
   "keywords": [
     "ember-addon",
